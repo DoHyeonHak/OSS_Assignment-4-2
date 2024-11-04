@@ -34,7 +34,8 @@
 
       function getProducts() {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", "https://67288121270bd0b97555c800.mockapi.io/products");
+        // xhr.open("GET", "http://localhost:3001/products");
+        xhr.open("GET", "https://672883cb270bd0b97555dbc6.mockapi.io/products");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send();
 
@@ -57,7 +58,7 @@
         const xhr = new XMLHttpRequest();
         xhr.open(
           "POST",
-          "https://67288121270bd0b97555c800.mockapi.io/products"
+          "https://672883cb270bd0b97555dbc6.mockapi.io/products"
         );
         xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
         const data = {
@@ -147,7 +148,7 @@
         const xhr = new XMLHttpRequest();
         xhr.open(
           "PUT",
-          "https://67288121270bd0b97555c800.mockapi.io/products/" + id
+          "https://672883cb270bd0b97555dbc6.mockapi.io/products/" + id
         );
         xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
         const data = {
@@ -171,7 +172,7 @@
         const xhr = new XMLHttpRequest();
         xhr.open(
           "DELETE",
-          "https://67288121270bd0b97555c800.mockapi.io/products/" + id
+          "https://672883cb270bd0b97555dbc6.mockapi.io/products/" + id
         );
         xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
         xhr.send();
