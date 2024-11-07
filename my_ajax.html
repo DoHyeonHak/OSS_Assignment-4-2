@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
     <style>
       h2 {
         text-align: center;
@@ -13,28 +19,219 @@
         width: 80%;
         float: left;
       }
+      body {
+        text-align: center;
+      }
       div {
         padding: 10px;
       }
+      .btn-container {
+        display: flex;
+        width: 80%;
+      }
+
+      #contents {
+        width: 80%;
+        margin: 0 auto;
+        background-color: lightgoldenrodyellow;
+        padding: 20px;
+        text-align: left;
+      }
     </style>
+  </head>
+  <body>
+    <h2>Products Management CRUD</h2>
+    <button id="btnPro" class="btn btn-primary">Bring all products data</button>
+    <button
+      id="btnOpenModal"
+      class="btn btn-success"
+      data-bs-toggle="modal"
+      data-bs-target="#productModal"
+    >
+      Add Product
+    </button>
+    <div
+      class="modal fade"
+      id="productModal"
+      tabindex="-1"
+      aria-labelledby="productModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productModalLabel">Add New Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="productForm">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  placeholder="Product Name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="price"
+                  class="form-control"
+                  placeholder="Price"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="category"
+                  class="form-control"
+                  placeholder="Category"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="stock"
+                  class="form-control"
+                  placeholder="Stock"
+                  required
+                />
+              </div>
+              <button id="btnAdd" type="button" class="btn btn-primary">
+                Add Product
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="contents"
+      style="height: 1000px; background-color: lightgoldenrodyellow"
+    ></div>
+    <div
+      class="modal fade"
+      id="updateModal"
+      tabindex="-1"
+      aria-labelledby="updateModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateModalLabel">Update Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateForm">
+              <input type="hidden" id="update_id" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="m_name"
+                  class="form-control"
+                  placeholder="Name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="m_price"
+                  class="form-control"
+                  placeholder="Price"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="m_category"
+                  class="form-control"
+                  placeholder="Category"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  id="m_stock"
+                  class="form-control"
+                  placeholder="Stock"
+                  required
+                />
+              </div>
+              <button id="btnUpdate" type="button" class="btn btn-primary">
+                Update
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
       window.onload = function () {
         let btnPro = document.getElementById("btnPro");
         let btnAdd = document.getElementById("btnAdd");
         getProducts();
-        btnPro.addEventListener("click", function (event) {
+        // modal instance
+        const addModal = new bootstrap.Modal(
+          document.getElementById("productModal")
+        );
+        const updateModal = new bootstrap.Modal(
+          document.getElementById("updateModal")
+        );
+
+        btnPro.addEventListener("click", function () {
           getProducts();
         });
+        // open add
         btnAdd.addEventListener("click", function (event) {
           event.preventDefault();
           postData();
+          addModal.hide();
         });
+        // open update
+        document
+          .getElementById("btnUpdate")
+          .addEventListener("click", function () {
+            updateData();
+            updateModal.hide();
+          });
       };
 
       function getProducts() {
         const xhr = new XMLHttpRequest();
-        // xhr.open("GET", "http://localhost:3001/products");
         xhr.open("GET", "https://672883cb270bd0b97555dbc6.mockapi.io/products");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send();
@@ -61,6 +258,7 @@
           "https://672883cb270bd0b97555dbc6.mockapi.io/products"
         );
         xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+
         const data = {
           name: name.value,
           price: price.value,
@@ -85,61 +283,36 @@
       function makeList(data) {
         let str = "<ul>";
         for (let key in data) {
-          str +=
-            "<li> " +
-            data[key].name +
-            " | $" +
-            data[key].price +
-            " | Stock: " +
-            data[key].stock +
-            " | Category: " +
-            data[key].category +
-            "</li>";
-          str +=
-            "<button onclick='updateForm(\"" +
-            data[key].id +
-            '", "' +
-            data[key].name +
-            '", "' +
-            data[key].price +
-            '", "' +
-            data[key].category +
-            '", "' +
-            data[key].stock +
-            "\")'>Modify</button>" +
-            "<button onclick='deleteData(\"" +
-            data[key].id +
-            "\")'>delete</button>";
+          str += `<li> ${data[key].name} | $${data[key].price} | Stock: ${data[key].stock} | Category: ${data[key].category}</li>`;
+          str += `<button onclick='openUpdateModal("${data[key].id}", "${data[key].name}", "${data[key].price}", "${data[key].category}", "${data[key].stock}")'>Modify</button>`;
+          str += `<button onclick='deleteData("${data[key].id}")'>Delete</button>`;
         }
         str += "</ul>";
         return str;
       }
 
-      function updateForm(
+      // function for opening modal. press butten.
+      function openUpdateModal(
         id,
         currentName,
         currentPrice,
         currentCategory,
         currentStock
       ) {
-        let updateForm = `
-        <div id="updateForm">
-          <input type="text" id="m_name" placeholder="New name" value="${currentName}" />
-          <input type="text" id="m_price" placeholder="New price" value="${currentPrice}" />
-          <input type="text" id="m_category" placeholder="New Category" value="${currentCategory}" />
-          <input type="text" id="m_stock" placeholder="New Stock" value="${currentStock}" />
-          <button onclick="updateData('${id}')">Modify</button>
-          <button id="cancelButton" onclick="cancelUpdate()">Cancel</button>
-        </div>
-      `;
-        document.getElementById("contents").innerHTML += updateForm;
+        document.getElementById("update_id").value = id;
+        document.getElementById("m_name").value = currentName;
+        document.getElementById("m_price").value = currentPrice;
+        document.getElementById("m_category").value = currentCategory;
+        document.getElementById("m_stock").value = currentStock;
+
+        const updateModal = new bootstrap.Modal(
+          document.getElementById("updateModal")
+        );
+        updateModal.show();
       }
 
-      function cancelUpdate() {
-        document.getElementById("updateForm").remove();
-      }
-
-      function updateData(id) {
+      function updateData() {
+        let id = document.getElementById("update_id").value;
         let name = document.getElementById("m_name").value;
         let price = document.getElementById("m_price").value;
         let stock = document.getElementById("m_stock").value;
@@ -151,17 +324,19 @@
           "https://672883cb270bd0b97555dbc6.mockapi.io/products/" + id
         );
         xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
-        const data = {
-          name: name,
-          price: price,
-          category: category,
-          stock: stock,
-        };
+
+        const data = { name, price, category, stock };
         xhr.send(JSON.stringify(data));
 
         xhr.onload = () => {
           if (xhr.status === 200) {
             getProducts();
+
+            // 내용 수정 이후 모달을 닫기 위한 인스턴스
+            const modalInstance = bootstrap.Modal.getInstance(
+              document.getElementById("updateModal")
+            );
+            modalInstance.hide();
           } else {
             console.log(xhr.status, xhr.statusText);
           }
@@ -186,21 +361,9 @@
         };
       }
     </script>
-  </head>
-
-  <body>
-    <h2>Products Management CRUD</h2>
-    <button id="btnPro" style="font-size: 13px">Bring all products data</button>
-    <div>
-      <input type="text" id="name" size="10" placeholder="name" />
-      <input type="text" id="price" size="10" placeholder="price" />
-      <input type="text" id="category" size="10" placeholder="category" />
-      <input type="text" id="stock" size="10" placeholder="stock" />
-      <button id="btnAdd" type="button">Add products</button>
-    </div>
-    <div
-      id="contents"
-      style="height: 1000px; background-color: lightgoldenrodyellow"
-    ></div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
